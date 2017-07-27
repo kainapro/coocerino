@@ -17,12 +17,13 @@ namespace WindowsFormsApp1
         {
             Resolver.RegisterDependencyResolver();
         }
+        asasdasd
                 /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
         static public IEnumerable<Tuple<string, string, string, string, string>> ReadCookies()
         {
-
+           
             var dbPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Google\Chrome\User Data\Default\Cookies";
             if (!System.IO.File.Exists(dbPath)) throw new System.IO.FileNotFoundException("Cant find cookie store", dbPath);
 
